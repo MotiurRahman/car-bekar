@@ -25,7 +25,7 @@ const Banner = () => {
         </div>
 
         <div className="absolute flex justify-start transform -translate-y-1/2 w-2/5 left-24 top-3/4">
-          <button className="btn btn-accent me-2">Button</button>
+          <button className="btn btn-accent mr-20">Button</button>
           <button className="btn btn-accent">Button</button>
         </div>
         <div className="absolute flex justify-end transform -translate-y-1/2 left-5 right-5 bottom-5">
