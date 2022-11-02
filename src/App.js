@@ -8,7 +8,6 @@ function App() {
   return (
     <div data-theme="cupcake" className="max-w-7xl mx-auto">
       <RouterProvider router={router}></RouterProvider>
-      <Home></Home>
     </div>
   );
 }
