@@ -1,10 +1,34 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import loginimg from "../../assets/images/login/login.svg";
+import { AuthUserContext } from "../../Context/AuthContext";
 
 const Sign_up = () => {
+  const { user, loading, createUser } = useContext(AuthUserContext);
+  const [msg, setMsg] = useState("");
+  const [show, setShow] = useState(true);
+  const nevigate = useNavigate();
   const handleSignUp = (e) => {
     e.preventDefault();
+    setShow(false);
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    createUser(email, password)
+      .then((userCredential) => {
+        const userInfo = userCredential.user;
+        console.log(userInfo);
+        setShow(true);
+        setMsg("");
+        form.reset();
+        nevigate("/login");
+      })
+      .catch((error) => {
+        setMsg(error.message);
+        console.log("error", error);
+        setShow(true);
+      });
   };
   return (
     <div>
@@ -46,19 +70,25 @@ const Sign_up = () => {
                 </label>
                 <input
                   type="text"
+                  name="password"
                   placeholder="password"
                   className="input input-bordered"
                   required
                 />
               </div>
               <div className="form-control mt-6">
-                <input
-                  className="btn btn-primary"
-                  type="submit"
-                  value="Login"
-                />
+                {show ? (
+                  <input
+                    className="btn btn-primary"
+                    type="submit"
+                    value="Sign Up"
+                  />
+                ) : (
+                  <button className={`btn btn-primary loading`}>loading</button>
+                )}
               </div>
             </form>
+            <p className="text-red-600 text-center">{msg}</p>
             <p className="m-3 text-center">
               Already have an account
               <Link className="text-orange-400 font-bold p-2" to="/login">

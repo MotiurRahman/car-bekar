@@ -1,10 +1,30 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import loginimg from "../../assets/images/login/login.svg";
+import AuthContext, { AuthUserContext } from "../../Context/AuthContext";
 
 const Login = () => {
+  const { user, loading, signIn } = useContext(AuthUserContext);
+  const [msg, setMsg] = useState("");
+  const [show, setShow] = useState(true);
+  const nevigate = useNavigate();
   const handleLogin = (e) => {
     e.preventDefault();
+    setShow(false);
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    signIn(email, password)
+      .then((result) => {
+        console.log(result.user);
+        setShow(true);
+        setMsg("");
+        nevigate("/");
+      })
+      .catch((error) => {
+        setMsg(error.message);
+        setShow(true);
+      });
   };
   return (
     <div>
@@ -22,6 +42,7 @@ const Login = () => {
                 </label>
                 <input
                   type="text"
+                  name="email"
                   placeholder="email"
                   className="input input-bordered"
                 />
@@ -32,6 +53,7 @@ const Login = () => {
                 </label>
                 <input
                   type="text"
+                  name="password"
                   placeholder="password"
                   className="input input-bordered"
                 />
@@ -42,13 +64,18 @@ const Login = () => {
                 </label>
               </div>
               <div className="form-control mt-6">
-                <input
-                  className="btn btn-primary"
-                  type="submit"
-                  value="Login"
-                />
+                {show ? (
+                  <input
+                    className={`btn btn-primary`}
+                    type="submit"
+                    value="Login"
+                  />
+                ) : (
+                  <button className={`btn btn-primary loading`}>loading</button>
+                )}
               </div>
             </form>
+            <p className="text-red-600 text-center">{msg}</p>
             <p className="m-3 text-center">
               New to Genius car{" "}
               <Link className="text-orange-400 font-bold p-2" to="/signup">
