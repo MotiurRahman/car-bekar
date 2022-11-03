@@ -1,7 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ServiceItem = ({ serviceItem }) => {
-  const { title, img, price } = serviceItem;
+  const { _id, title, img, price } = serviceItem;
+  const serviceCheckOut = (id) => {
+    alert(id);
+  };
   return (
     <div>
       <div className="card card-compact w-96 bg-base-100 shadow-xl">
@@ -12,7 +16,14 @@ const ServiceItem = ({ serviceItem }) => {
           <h2 className="card-title">{title}</h2>
           <p className="text-2xl text-red-300">Price ${price}</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">Buy Now</button>
+            {/* <button
+              onClick={() => serviceCheckOut(_id)}
+              className="btn btn-primary"
+            >
+              Check Out
+            </button> */}
+
+            <Link to={`/checkout/${_id}`}>Checkout</Link>
           </div>
         </div>
       </div>

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
+import { AuthUserContext } from "../../Context/AuthContext";
 
 const Header = () => {
+  const { user, logout } = useContext(AuthUserContext);
   const menuItems = (
     <>
       <li>
@@ -23,7 +25,11 @@ const Header = () => {
         <Link to="/contact">Contact</Link>
       </li>
       <li>
-        <Link to="/login">Login</Link>
+        {user?.email ? (
+          <Link onClick={logout}>Logout</Link>
+        ) : (
+          <Link to="/login">Loging</Link>
+        )}
       </li>
     </>
   );
