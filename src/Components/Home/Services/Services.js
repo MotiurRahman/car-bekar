@@ -5,10 +5,11 @@ const Services = () => {
   const [service, setService] = useState([]);
 
   useEffect(() => {
-    fetch("https://www.themealdb.com/api/json/v1/1/filter.php?a=Canadian")
+    fetch("http://localhost:8000/service")
       .then((res) => res.json())
       .then((data) => {
-        setService(data.meals);
+        console.log(data);
+        setService(data);
       });
   }, []);
   return (
@@ -26,7 +27,7 @@ const Services = () => {
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {service?.map((serviceItem) => (
           <ServiceItem
-            key={serviceItem.idMeal}
+            key={serviceItem._id}
             serviceItem={serviceItem}
           ></ServiceItem>
         ))}
