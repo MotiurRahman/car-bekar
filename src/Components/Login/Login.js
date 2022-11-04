@@ -1,13 +1,15 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import loginimg from "../../assets/images/login/login.svg";
-import AuthContext, { AuthUserContext } from "../../Context/AuthContext";
+import { AuthUserContext } from "../../Context/AuthContext";
 
 const Login = () => {
-  const { user, loading, signIn } = useContext(AuthUserContext);
+  const { user, loading, signIn, setLoading } = useContext(AuthUserContext);
   const [msg, setMsg] = useState("");
   const [show, setShow] = useState(true);
-  const nevigate = useNavigate();
+  const navigate = useNavigate();
+  let location = useLocation();
+  let from = location.state?.from?.pathname || "/";
   const handleLogin = (e) => {
     e.preventDefault();
     setShow(false);
@@ -19,11 +21,15 @@ const Login = () => {
         console.log(result.user);
         setShow(true);
         setMsg("");
-        nevigate("/");
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         setMsg(error.message);
         setShow(true);
+      })
+      .finally(() => {
+        setLoading(false);
+        alert("check");
       });
   };
   return (

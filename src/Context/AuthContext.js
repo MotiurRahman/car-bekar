@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -12,7 +12,7 @@ export const AuthUserContext = createContext();
 const auth = getAuth(app);
 const AuthContext = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Create user
   const createUser = (email, password) => {
@@ -28,23 +28,28 @@ const AuthContext = ({ children }) => {
 
   // Logout
   const logout = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
+    setLoading(true);
+    return signOut(auth);
   };
 
-  useState(() => {
-    onAuthStateChanged(auth, (currentUser) => {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+
       setLoading(false);
     });
+    return () => unsubscribe();
   }, []);
 
-  const authValue = { user, loading, createUser, signIn, logout };
+  const authValue = {
+    user,
+    setUser,
+    loading,
+    setLoading,
+    createUser,
+    signIn,
+    logout,
+  };
   return (
     <AuthUserContext.Provider value={authValue}>
       {children}

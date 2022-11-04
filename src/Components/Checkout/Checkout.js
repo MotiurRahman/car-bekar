@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import checkouImg from "../../assets/images/checkout/checkout.png";
 import { AuthUserContext } from "../../Context/AuthContext";
 import "./Checkout.css";
@@ -7,9 +7,9 @@ import "./Checkout.css";
 const Checkout = () => {
   const { _id, title, img, price } = useLoaderData();
   const { user } = useContext(AuthUserContext);
-
+  const nevigate = useNavigate();
   const handleCheckout = (e) => {
-    e.prevendDefault();
+    e.preventDefault();
     const form = e.target;
     const firstNamename = form.firstName.value;
     const lastName = form.lastName.value;
@@ -28,7 +28,24 @@ const Checkout = () => {
       message,
     };
 
-    console.log();
+    fetch("http://localhost:8000/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(order),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged == true) {
+          alert("Order placed successfully");
+          form.reset();
+          nevigate("/orders");
+        }
+
+        console.log(data);
+      });
   };
 
   return (
@@ -44,18 +61,21 @@ const Checkout = () => {
               name="firstName"
               placeholder="Frist Name"
               className="input w-full"
+              required
             />
             <input
               type="text"
               name="lastName"
               placeholder="Last Name"
               className="input w-full"
+              required
             />
             <input
               type="number"
               name="phone"
               placeholder="Your Phone"
               className="input w-full"
+              required
             />
             <input
               type="email"
@@ -65,16 +85,12 @@ const Checkout = () => {
               className="input w-full"
               readOnly
             />
-            <input
-              type="textarea"
-              name="message"
-              placeholder="your message"
-              className="input w-full"
-            />
           </div>
           <textarea
             className="textarea w-full mt-10"
-            placeholder="Bio"
+            name="message"
+            placeholder="your message"
+            required
           ></textarea>
           <button className="btn btn-accent w-full mt-5">Order Confirm</button>
         </form>
