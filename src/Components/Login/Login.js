@@ -18,9 +18,21 @@ const Login = () => {
     const password = form.password.value;
     signIn(email, password)
       .then((result) => {
-        console.log(result.user);
+        //console.log(result.user);
         setShow(true);
         setMsg("");
+        const currentUser = {
+          email: result.user.email,
+        };
+        fetch("http://localhost:8000/jwt", {
+          method: "POST",
+          headers: { "content-type": "Application/json" },
+          body: JSON.stringify(currentUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            localStorage.setItem("car-token", data.token);
+          });
         navigate(from, { replace: true });
       })
       .catch((error) => {
@@ -29,7 +41,6 @@ const Login = () => {
       })
       .finally(() => {
         setLoading(false);
-        alert("check");
       });
   };
   return (
