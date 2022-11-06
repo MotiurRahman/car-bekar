@@ -28,7 +28,7 @@ const Checkout = () => {
       message,
     };
 
-    fetch("http://localhost:8000/orders", {
+    fetch("https://curdapi.vercel.app/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

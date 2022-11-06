@@ -20,7 +20,7 @@ const router = createBrowserRouter([
       {
         path: "/checkout/:id",
         loader: ({ params }) => {
-          return fetch(`http://localhost:8000/service/${params.id}`);
+          return fetch(`https://curdapi.vercel.app/service/${params.id}`);
         },
         element: <Checkout></Checkout>,
       },

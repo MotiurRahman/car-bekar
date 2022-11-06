@@ -24,7 +24,7 @@ const Login = () => {
         const currentUser = {
           email: result.user.email,
         };
-        fetch("http://localhost:8000/jwt", {
+        fetch("https://curdapi.vercel.app/jwt", {
           method: "POST",
           headers: { "content-type": "Application/json" },
           body: JSON.stringify(currentUser),

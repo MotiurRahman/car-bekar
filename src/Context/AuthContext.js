@@ -29,6 +29,7 @@ const AuthContext = ({ children }) => {
   // Logout
   const logout = () => {
     setLoading(true);
+    localStorage.removeItem("car-token");
     return signOut(auth);
   };
 

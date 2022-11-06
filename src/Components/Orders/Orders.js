@@ -3,10 +3,10 @@ import { AuthUserContext } from "../../Context/AuthContext";
 import OrderDetails from "./OrderDetails";
 
 const Orders = () => {
-  const { user } = useContext(AuthUserContext);
+  const { user, logout } = useContext(AuthUserContext);
   const [Orders, setOrder] = useState([]);
 
-  const url = `http://localhost:8000/orders?email=${user?.email}`;
+  const url = `https://curdapi.vercel.app/orders?email=${user?.email}`;
 
   useEffect(() => {
     fetch(url, {
@@ -14,14 +14,24 @@ const Orders = () => {
         authorization: `Bearer ${localStorage.getItem("car-token")}`,
       },
     })
-      .then((res) => res.json())
-      .then((data) => setOrder(data));
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          return logout();
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setOrder(data);
+      });
   }, [user?.email]);
 
   const handleDelete = (id) => {
     if (window.confirm("Would you like to delete")) {
-      fetch(`http://localhost:8000/orders/${id}`, {
+      fetch(`https://curdapi.vercel.app/orders/${id}`, {
         method: "DELETE",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("car-token")}`,
+        },
       })
         .then((res) => res.json())
         .then((data) => {
@@ -32,10 +42,11 @@ const Orders = () => {
   };
 
   const handleStatusUpdate = (id) => {
-    fetch(`http://localhost:8000/orders/${id}`, {
+    fetch(`https://curdapi.vercel.app/orders/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("car-token")}`,
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({ status: "Approved" }),
@@ -54,7 +65,7 @@ const Orders = () => {
   return (
     <div>
       <h3 className="text-3xl text-center my-9">
-        You have {Orders.length} orders
+        You have {Orders?.length} orders
       </h3>
       <table className="table w-full">
         <thead>
@@ -69,7 +80,7 @@ const Orders = () => {
           </tr>
         </thead>
         <tbody>
-          {Orders.map((order) => (
+          {Orders?.map((order) => (
             <OrderDetails
               key={order._id}
               order={order}

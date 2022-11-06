@@ -5,7 +5,7 @@ const Services = () => {
   const [service, setService] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/service")
+    fetch("https://curdapi.vercel.app/service")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

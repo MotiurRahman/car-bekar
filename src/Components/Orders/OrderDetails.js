@@ -15,7 +15,7 @@ const OrderDetails = ({ order, handleDelete, handleStatusUpdate }) => {
   const [orderImg, setOrderImg] = useState({});
 
   useEffect(() => {
-    fetch(`http://localhost:8000/service/${service}`)
+    fetch(`https://curdapi.vercel.app/service/${service}`)
       .then((res) => res.json())
       .then((data) => setOrderImg(data));
   }, [service]);
